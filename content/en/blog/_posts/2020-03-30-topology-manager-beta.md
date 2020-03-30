@@ -12,7 +12,6 @@ This blog post describes the **<code>TopologyManager</code>**, a beta feature of
 Prior to the introduction of the **<code>TopologyManager</code>**, the CPU and Device Manager would make resource allocation decisions independent of each other. This could result in undesirable allocations on multi-socket systems, causing degraded performance on latency critical applications. With the introduction of the <strong><code>TopologyManager</code></strong>, we now have a way to avoid this.
 
 This blog post covers:
-
 1. A brief introduction to NUMA and why it is important
 2. The policies available to end-users to ensure NUMA alignment of CPUs and devices
 3. The internal details of how the **<code>TopologyManager</code>** works
@@ -281,13 +280,7 @@ With a resulting aligned allocation of:
 {cpu: {0, 1}, gpu: 0, nic: 0}
 ```
 
-
-
-
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![drawing](https://docs.google.com/a/google.com/drawings/d/12345/export/png)
+![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider1.png)
 
 When considering **<code>Container1</code>** these resources are then presumed to be unavailable, and thus only the following set of hints will be generated:
 
@@ -303,13 +296,7 @@ With a resulting aligned allocation of:
 {cpu: {4, 5}, gpu: 1, nic: 1}
 ```
 
-
-
-
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![drawing](https://docs.google.com/a/google.com/drawings/d/12345/export/png)
+![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider2.png)
 
 **NOTE: **Unlike the pseudocode provided at the beginning of this section, the call to **<code>Allocate()</code>** does not actually take a parameter for the merged “best” hint directly. Instead, the <strong><code>TopologyManager</code></strong> implements the following <strong><code>Store</code></strong> interface that <strong><code>HintProviders</code></strong> can query to retrieve the hint generated for a particular container once it has been generated:
 
