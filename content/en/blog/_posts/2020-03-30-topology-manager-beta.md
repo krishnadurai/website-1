@@ -30,9 +30,7 @@ We talk about a peripheral device as being part of a NUMA node based on the shor
 For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas CPUs 4-7 are part of NUMA node 1. Likewise GPU 0 and NIC 0 are said to be part of NUMA node 0 because they are attached to Socket 0, whose CPUs are all part of NUMA node 0. The same is true for GPU 1 and NIC 1 on NUMA node 1.
 
 
-
 ![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
-
 
         **Figure 1**: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
 
@@ -144,16 +142,9 @@ for container := range append(InitContainers, Containers...) {
 The following diagram summarizes the steps taken during this loop:
 
 
-
-<p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![drawing](https://docs.google.com/a/google.com/drawings/d/12345/export/png)
+![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-steps-during-loop.png)
 
 The steps themselves are:
-
-
-
 1. Loop over all containers in a pod.
 2. For each container, gather “**<code>TopologyHints</code>**” from a set of “<strong><code>HintProviders</code></strong>” for each topology-aware resource type requested by the container (e.g. <strong><code>gpu-vendor.com/gpu</code></strong>, <strong><code>nic-vendor.com/nic</code></strong>, <strong><code>cpu</code></strong>, etc.).
 3. Using the selected policy, merge the gathered <strong><code>TopologyHints</code></strong> to find the “best” hint that aligns resource allocations across all resource types.
