@@ -235,32 +235,35 @@ For example, consider the system in Figure 1, with the following two containers 
    </td>
   </tr>
   <tr>
-   <td><strong><code>spec:</code></strong>
- <strong> <code>  containers:</code></strong>
- <strong> <code>  - name: numa-aligned-container0</code></strong>
- <strong> <code>    image: alpine</code></strong>
- <strong> <code>    resources:</code></strong>
- <strong> <code>      limits:</code></strong>
- <strong> <code>        cpu: 2</code></strong>
- <strong> <code>        memory: 200Mi</code></strong>
- <strong> <code>        gpu-vendor.com/gpu: 1</code></strong>
- <strong> <code>        nic-vendor.com/nic: 1</code></strong>
+   <td>
+     
+  ```
+  spec:
+    containers:
+     - name: numa-aligned-container0
+       image: alpine
+       resources:
+       limits:
+          cpu: 2
+          memory: 200Mi
+          gpu-vendor.com/gpu: 1
+          nic-vendor.com/nic: 1
+  ```
    </td>
-   <td><strong><code>spec:</code></strong>
- <strong> <code>  containers:</code></strong>
- <strong> <code>  - name: numa-aligned-container1</code></strong>
- <strong> <code>    image: alpine</code></strong>
- <strong> <code>    resources:</code></strong>
-
-    <strong><code>limits:</code></strong>
-
-     <strong> <code>  cpu: 2</code></strong>
-
-     <strong> <code>  memory: 200Mi</code></strong>
-
-     <strong> <code>  gpu-vendor.com/gpu: 1</code></strong>
-
-     <strong> <code>  nic-vendor.com/nic: 1</code></strong>
+   <td>
+  
+  ```
+  spec:
+    containers:
+     - name: numa-aligned-container1
+       image: alpine
+       resources:
+       limits:
+          cpu: 2
+          memory: 200Mi
+          gpu-vendor.com/gpu: 1
+          nic-vendor.com/nic: 1
+  ```
    </td>
   </tr>
 </table>
