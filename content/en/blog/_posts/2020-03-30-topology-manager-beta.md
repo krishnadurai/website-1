@@ -31,7 +31,7 @@ For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas C
 
 ![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
 
-        **Figure 1**: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
+        Figure 1: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
 
 Although the example above shows a 1-1 mapping of NUMA Node to Socket, this is not necessarily true in the general case. There may be multiple sockets on a single NUMA node, or individual CPUs of a single socket may be connected to different NUMA nodes. Moreover, emerging technologies such as Sub-NUMA Clustering ([available on recent intel CPUs](https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview)) allow single CPUs to be associated with multiple NUMA nodes so long as their memory access times to both nodes are the same (or have a negligible difference).
 
