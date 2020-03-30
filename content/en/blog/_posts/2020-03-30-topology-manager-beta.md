@@ -1,8 +1,8 @@
 ---
 layout: blog
 title: "Kubernetes Topology Manager Moves to Beta - Align Up!"
-date: 2019-12-09
-slug: kubernetes-1-17-feature-csi-migration-beta
+date: 2020-03-30
+slug: kubernetes-1-18-feature-topoloy-manager-beta
 ---
 
 **Authors:** Kevin Klues (NVIDIA), Victor Pickard (RedHat), Conor Nolan (Intel)
