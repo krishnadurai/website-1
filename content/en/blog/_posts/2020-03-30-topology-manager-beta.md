@@ -41,12 +41,7 @@ Although the example above shows a 1-1 mapping of NUMA Node to Socket, this is n
 The **<code>TopologyManager</code>** has been built to handle all of these scenarios.
 
 
-
-
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![drawing](https://docs.google.com/a/google.com/drawings/d/12345/export/png)
+![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/align-up.png)
 
 As previously stated, the **<code>TopologyManager</code>** allows users to align their CPU and peripheral device allocations by NUMA node. There are several policies available for this:
 
