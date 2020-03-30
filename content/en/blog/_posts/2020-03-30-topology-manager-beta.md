@@ -30,8 +30,6 @@ We talk about a peripheral device as being part of a NUMA node based on the shor
 For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas CPUs 4-7 are part of NUMA node 1. Likewise GPU 0 and NIC 0 are said to be part of NUMA node 0 because they are attached to Socket 0, whose CPUs are all part of NUMA node 0. The same is true for GPU 1 and NIC 1 on NUMA node 1.
 
 
-<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
 
 ![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
 
