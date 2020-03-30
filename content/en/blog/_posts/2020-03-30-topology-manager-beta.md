@@ -349,11 +349,9 @@ The general merge strategy for all supported policies begins the same:
 
 Following the example from the previous section with hints for <strong><code>Container0</code></strong> generated as:
 
-	                                **<code>cpu: {{01: True}, {10: True}, {11: False}}</code></strong>
-
-	**<code>gpu-vendor.com/gpu: {{01: True}, {10: True}}</code></strong>
-
-	**<code>nic-vendor.com/nic: {{01: True}, {10: True}}</code></strong>
+  cpu: {{01: True}, {10: True}, {11: False}}
+  gpu-vendor.com/gpu: {{01: True}, {10: True}}
+  nic-vendor.com/nic: {{01: True}, {10: True}}
 
 The above algorithm results in the following set of cross-product entries and “merged” hints:
 
