@@ -238,7 +238,6 @@ For example, consider the system in Figure 1, with the following two containers 
   <tr>
    <td>
      
-```
     spec:
       containers:
       - name: numa-aligned-container0
@@ -249,12 +248,10 @@ For example, consider the system in Figure 1, with the following two containers 
             memory: 200Mi
             gpu-vendor.com/gpu: 1
             nic-vendor.com/nic: 1
-```   
   
    </td>
    <td>
   
-```
     spec:
       containers:
       - name: numa-aligned-container1
@@ -265,7 +262,7 @@ For example, consider the system in Figure 1, with the following two containers 
             memory: 200Mi
             gpu-vendor.com/gpu: 1
             nic-vendor.com/nic: 1
-```
+
   
    </td>
   </tr>
@@ -329,11 +326,12 @@ The general merge strategy for all supported policies begins the same:
 
 Following the example from the previous section with hints for <strong><code>Container0</code></strong> generated as:
 
-<code>
+
   cpu: {{01: True}, {10: True}, {11: False}}
   gpu-vendor.com/gpu: {{01: True}, {10: True}}
   nic-vendor.com/nic: {{01: True}, {10: True}}
-</code>
+
+
 
 The above algorithm results in the following set of cross-product entries and “merged” hints:
 
