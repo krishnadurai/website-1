@@ -29,7 +29,7 @@ We talk about a peripheral device as being part of a NUMA node based on the shor
 For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas CPUs 4-7 are part of NUMA node 1. Likewise GPU 0 and NIC 0 are said to be part of NUMA node 0 because they are attached to Socket 0, whose CPUs are all part of NUMA node 0. The same is true for GPU 1 and NIC 1 on NUMA node 1.
 
 
-![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
+![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
 
         Figure 1: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
 
@@ -38,7 +38,7 @@ Although the example above shows a 1-1 mapping of NUMA Node to Socket, this is n
 The **<code>TopologyManager</code>** has been built to handle all of these scenarios.
 
 
-![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/align-up.png)
+![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/align-up.png)
 
 As previously stated, the **<code>TopologyManager</code>** allows users to align their CPU and peripheral device allocations by NUMA node. There are several policies available for this:
 
@@ -141,7 +141,7 @@ for container := range append(InitContainers, Containers...) {
 The following diagram summarizes the steps taken during this loop:
 
 
-![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-steps-during-loop.png)
+![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-steps-during-loop.png)
 
 The steps themselves are:
 1. Loop over all containers in a pod.
@@ -183,7 +183,7 @@ In general, **<code>HintProviders</code>** generate <strong><code>TopologyHints<
 ```
 
 
-At present, all **<code>HintProviders</code> **set the <strong><code>Preferred</code></strong> field to <strong><code>True</code></strong> if and only if the <strong><code>NUMANodeAffinity</code></strong> encodes a <em>minimal</em> set of NUMA nodes that can satisfy the resource request. Normally, this will only be <strong><code>True</code></strong> for <strong><code>TopologyHints</code></strong> with a single NUMA node set in their bitmask. However, it may also be <strong><code>True</code></strong> if the only way to <em>ever</em> satisfy the resource request is to span multiple NUMA nodes (e.g. 2 devices are requested and the only 2 devices on the system are on different NUMA nodes):
+At present, all **<code>HintProviders</code>** set the <strong><code>Preferred</code></strong> field to <strong><code>True</code></strong> if and only if the <strong><code>NUMANodeAffinity</code></strong> encodes a <em>minimal</em> set of NUMA nodes that can satisfy the resource request. Normally, this will only be <strong><code>True</code></strong> for <strong><code>TopologyHints</code></strong> with a single NUMA node set in their bitmask. However, it may also be <strong><code>True</code></strong> if the only way to <em>ever</em> satisfy the resource request is to span multiple NUMA nodes (e.g. 2 devices are requested and the only 2 devices on the system are on different NUMA nodes):
 
 
 ```
@@ -237,7 +237,7 @@ For example, consider the system in Figure 1, with the following two containers 
   <tr>
    <td>
      
-  ```
+  <code>
   spec:
     containers:
      - name: numa-aligned-container0
@@ -248,11 +248,11 @@ For example, consider the system in Figure 1, with the following two containers 
           memory: 200Mi
           gpu-vendor.com/gpu: 1
           nic-vendor.com/nic: 1
-  ```
+  </code>
    </td>
    <td>
   
-  ```
+  <code>
   spec:
     containers:
      - name: numa-aligned-container1
@@ -263,7 +263,7 @@ For example, consider the system in Figure 1, with the following two containers 
           memory: 200Mi
           gpu-vendor.com/gpu: 1
           nic-vendor.com/nic: 1
-  ```
+  </code>
    </td>
   </tr>
 </table>
@@ -283,7 +283,7 @@ With a resulting aligned allocation of:
 {cpu: {0, 1}, gpu: 0, nic: 0}
 ```
 
-![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider1.png)
+![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider1.png)
 
 When considering **<code>Container1</code>** these resources are then presumed to be unavailable, and thus only the following set of hints will be generated:
 
@@ -301,7 +301,7 @@ With a resulting aligned allocation of:
 
 ![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider2.png)
 
-**NOTE: **Unlike the pseudocode provided at the beginning of this section, the call to **<code>Allocate()</code>** does not actually take a parameter for the merged “best” hint directly. Instead, the <strong><code>TopologyManager</code></strong> implements the following <strong><code>Store</code></strong> interface that <strong><code>HintProviders</code></strong> can query to retrieve the hint generated for a particular container once it has been generated:
+**NOTE:**Unlike the pseudocode provided at the beginning of this section, the call to **<code>Allocate()</code>** does not actually take a parameter for the merged “best” hint directly. Instead, the <strong><code>TopologyManager</code></strong> implements the following <strong><code>Store</code></strong> interface that <strong><code>HintProviders</code></strong> can query to retrieve the hint generated for a particular container once it has been generated:
 
 
 ```
@@ -311,13 +311,14 @@ type Store interface {
 ```
 
 
-Separating this out into its own API call allows one to access this hint outside of the pod admission loop. This is useful for debugging as well as for reporting generated hints in tools such as **<code>kubectl</code> **(not yet available).
+Separating this out into its own API call allows one to access this hint outside of the pod admission loop. This is useful for debugging as well as for reporting generated hints in tools such as **<code>kubectl</code>**(not yet available).
 
 ### Policy.Merge
 
 The merge strategy defined by a given policy dictates how it combines the set of **<code>TopologyHints</code>** generated by all <strong><code>HintProviders</code></strong> into a single <strong><code>TopologyHint</code></strong> that can be used to inform aligned resource allocations.
 
 The general merge strategy for all supported policies begins the same:
+
 1. Take the cross-product of **<code>TopologyHints</code>** generated for each resource type
 2. For each entry in the cross-product, <strong><code>bitwise-and</code></strong> the NUMA affinities of each <strong><code>TopologyHint</code></strong> together. Set this as the NUMA affinity in a resulting “merged” hint.
 3. If all of the hints in an entry have <strong><code>Preferred</code></strong> set to <strong> <code>True</code></strong> , set <strong><code>Preferred</code></strong> to <strong><code>True</code></strong> in the resulting “merged” hint.
@@ -325,9 +326,11 @@ The general merge strategy for all supported policies begins the same:
 
 Following the example from the previous section with hints for <strong><code>Container0</code></strong> generated as:
 
+<code>
   cpu: {{01: True}, {10: True}, {11: False}}
   gpu-vendor.com/gpu: {{01: True}, {10: True}}
   nic-vendor.com/nic: {{01: True}, {10: True}}
+</code>
 
 The above algorithm results in the following set of cross-product entries and “merged” hints:
 
@@ -443,6 +446,7 @@ The above algorithm results in the following set of cross-product entries and �
 Once this list of “merged” hints has been generated, it is the job of the specific **<code>TopologyManager</code>** policy in use to decide which one to consider as the “best” hint.
 
 In general, this involves:
+
 1. Sorting merged hints by their “narrowness”. Narrowness is defined as the number of bits set in a hint’s NUMA affinity mask. The fewer bits set, the narrower the hint. For hints that have the same number of bits set in their NUMA affinity mask, the hint with the most low order bits set is considered narrower.
 2. Sorting merged hints by their **<code>Preferred</code>** field. Hints that have <strong><code>Preferred</code></strong> set to <strong><code>True</code></strong> are considered more likely candidates than hints with <strong><code>Preferred</code></strong> set to <strong><code>False</code></strong>.
 3. Selecting the narrowest hint with the best possible setting for <strong><code>Preferred</code></strong>.
@@ -482,7 +486,7 @@ Currently, the **<code>TopologyManager</code>** acts as a Pod Admission controll
 
 So how do we go about addressing this limitation? We have the [Kubernetes Scheduling Framework](https://github.com/kubernetes/enhancements/blob/master/keps/sig-scheduling/20180409-scheduling-framework.md) to the rescue! This framework provides a new set of plugin APIs that integrate with the existing Kubernetes Scheduler and allow scheduling features, such as NUMA alignment, to be implemented without having to resort to other, perhaps less appealing alternatives, including writing your own scheduler, or even worse, creating a fork to add your own scheduler secret sauce.
 
-The details of how to implement these extensions for integration with the **<code>TopologyManager</code> **have not yet been worked out. We still need to answer questions like:
+The details of how to implement these extensions for integration with the **<code>TopologyManager</code>** have not yet been worked out. We still need to answer questions like:
 
 
     Will we require duplicated logic to determine device affinity in the **<code>TopologyManager</code>** and the scheduler?
