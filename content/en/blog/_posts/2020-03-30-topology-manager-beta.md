@@ -116,7 +116,7 @@ Following Figure 1 from the previous section, this would result in one of the fo
 
 And that’s it! Just follow this pattern to have the **<code>TopologyManager</code>** ensure NUMA alignment across containers that request topology-aware devices and exclusive CPUs.
 
-**NOTE: **if a pod is rejected by one of the **<code>TopologyManager</code>** policies, it will be placed in a <strong><code>Terminated</code></strong> state with a pod admission error and a reason of "<strong><code>TopologyAffinityError</code></strong>". Once a pod is in this state, the Kubernetes scheduler will not attempt to reschedule it. It is therefore recommended to use a <strong><code>[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment)</code></strong> with replicas to trigger a redeploy of the pod on such a failure. An [external control loop](https://kubernetes.io/docs/concepts/architecture/controller/) can also be implemented to trigger a redeployment of pods that have a <strong><code>TopologyAffinityError</code></strong>.
+**NOTE:** if a pod is rejected by one of the **<code>TopologyManager</code>** policies, it will be placed in a <strong><code>Terminated</code></strong> state with a pod admission error and a reason of "<strong><code>TopologyAffinityError</code></strong>". Once a pod is in this state, the Kubernetes scheduler will not attempt to reschedule it. It is therefore recommended to use a <strong><code>[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment)</code></strong> with replicas to trigger a redeploy of the pod on such a failure. An [external control loop](https://kubernetes.io/docs/concepts/architecture/controller/) can also be implemented to trigger a redeployment of pods that have a <strong><code>TopologyAffinityError</code></strong>.
 
 
 ## This is great, so how does it work under the hood?
@@ -221,7 +221,7 @@ type HintProvider interface {
 ```
 
 
-Notice that the call to **<code>GetTopologyHints()</code> **returns a <strong><code>map[string][]TopologyHint</code></strong>. This allows a single <strong><code>HintProvider</code></strong> to provide hints for multiple resource types instead of just one. For example, the <strong><code>DeviceManager</code></strong> requires this in order to pass hints back for every resource type registered by its plugins.
+Notice that the call to **<code>GetTopologyHints()</code>** returns a <strong><code>map[string][]TopologyHint</code></strong>. This allows a single <strong><code>HintProvider</code></strong> to provide hints for multiple resource types instead of just one. For example, the <strong><code>DeviceManager</code></strong> requires this in order to pass hints back for every resource type registered by its plugins.
 
 As **<code>HintProviders</code>** generate their hints, they only consider how alignment could be satisfied for <em>currently</em> available resources on the system. Any resources already allocated to other containers are not considered.
 
@@ -238,33 +238,35 @@ For example, consider the system in Figure 1, with the following two containers 
   <tr>
    <td>
      
-  <code>
-  spec:
-    containers:
-     - name: numa-aligned-container0
-       image: alpine
-       resources:
-       limits:
-          cpu: 2
-          memory: 200Mi
-          gpu-vendor.com/gpu: 1
-          nic-vendor.com/nic: 1
-  </code>
+```
+    spec:
+      containers:
+      - name: numa-aligned-container0
+        image: alpine
+        resources:
+          limits:
+            cpu: 2
+            memory: 200Mi
+            gpu-vendor.com/gpu: 1
+            nic-vendor.com/nic: 1
+```   
+  
    </td>
    <td>
   
-  <code>
-  spec:
-    containers:
-     - name: numa-aligned-container1
-       image: alpine
-       resources:
-       limits:
-          cpu: 2
-          memory: 200Mi
-          gpu-vendor.com/gpu: 1
-          nic-vendor.com/nic: 1
-  </code>
+```
+    spec:
+      containers:
+      - name: numa-aligned-container1
+        image: alpine
+        resources:
+          limits:
+            cpu: 2
+            memory: 200Mi
+            gpu-vendor.com/gpu: 1
+            nic-vendor.com/nic: 1
+```
+  
    </td>
   </tr>
 </table>
