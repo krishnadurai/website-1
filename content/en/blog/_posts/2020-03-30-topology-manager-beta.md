@@ -12,11 +12,12 @@ This blog post describes the **<code>TopologyManager</code>**, a beta feature of
 Prior to the introduction of the **<code>TopologyManager</code>**, the CPU and Device Manager would make resource allocation decisions independent of each other. This could result in undesirable allocations on multi-socket systems, causing degraded performance on latency critical applications. With the introduction of the <strong><code>TopologyManager</code></strong>, we now have a way to avoid this.
 
 This blog post covers:
+
 1. A brief introduction to NUMA and why it is important
-2. The policies available to end-users to ensure NUMA alignment of CPUs and devices
-3. The internal details of how the **<code>TopologyManager</code>** works
-4. Current limitations of the <strong><code>TopologyManager</code></strong>
-5. Future directions of the <strong><code>TopologyManager</code></strong>
+1. The policies available to end-users to ensure NUMA alignment of CPUs and devices
+1. The internal details of how the **<code>TopologyManager</code>** works
+1. Current limitations of the <strong><code>TopologyManager</code></strong>
+1. Future directions of the <strong><code>TopologyManager</code></strong>
 
 ## So, what is NUMA and why do I care?
 
@@ -31,7 +32,7 @@ For example, in Figure 1, CPUs 0-3 are said to be part of NUMA node 0, whereas C
 
 ![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/example-numa-system.png)
 
-        Figure 1: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
+Figure 1: An example system with 2 NUMA nodes, 2 Sockets with 4 CPUs each, 2 GPUs, and 2 NICs. CPUs on Socket 0, GPU 0, and NIC 0 are all part of NUMA node 0. CPUs on Socket 1, GPU 1, and NIC 1 are all part of NUMA node 1. 
 
 Although the example above shows a 1-1 mapping of NUMA Node to Socket, this is not necessarily true in the general case. There may be multiple sockets on a single NUMA node, or individual CPUs of a single socket may be connected to different NUMA nodes. Moreover, emerging technologies such as Sub-NUMA Clustering ([available on recent intel CPUs](https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview)) allow single CPUs to be associated with multiple NUMA nodes so long as their memory access times to both nodes are the same (or have a negligible difference).
 
@@ -299,7 +300,7 @@ With a resulting aligned allocation of:
 {cpu: {4, 5}, gpu: 1, nic: 1}
 ```
 
-![drawing](../../../../static/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider2.png)
+![drawing](/images/blog/2020-03-25-kubernetes-1.18-release-announcement/numa-hint-provider2.png)
 
 **NOTE:**Unlike the pseudocode provided at the beginning of this section, the call to **<code>Allocate()</code>** does not actually take a parameter for the merged “best” hint directly. Instead, the <strong><code>TopologyManager</code></strong> implements the following <strong><code>Store</code></strong> interface that <strong><code>HintProviders</code></strong> can query to retrieve the hint generated for a particular container once it has been generated:
 
@@ -448,8 +449,8 @@ Once this list of “merged” hints has been generated, it is the job of the sp
 In general, this involves:
 
 1. Sorting merged hints by their “narrowness”. Narrowness is defined as the number of bits set in a hint’s NUMA affinity mask. The fewer bits set, the narrower the hint. For hints that have the same number of bits set in their NUMA affinity mask, the hint with the most low order bits set is considered narrower.
-2. Sorting merged hints by their **<code>Preferred</code>** field. Hints that have <strong><code>Preferred</code></strong> set to <strong><code>True</code></strong> are considered more likely candidates than hints with <strong><code>Preferred</code></strong> set to <strong><code>False</code></strong>.
-3. Selecting the narrowest hint with the best possible setting for <strong><code>Preferred</code></strong>.
+1. Sorting merged hints by their **<code>Preferred</code>** field. Hints that have <strong><code>Preferred</code></strong> set to <strong><code>True</code></strong> are considered more likely candidates than hints with <strong><code>Preferred</code></strong> set to <strong><code>False</code></strong>.
+1. Selecting the narrowest hint with the best possible setting for <strong><code>Preferred</code></strong>.
 
 In the case of the <strong><code>best-effort</code></strong> policy this algorithm will always result in <em>some</em> hint being selected as the “best” hint and the pod being admitted. This “best” hint is then made available to <strong><code>HintProviders</code></strong> so they can make their resource allocations based on it.
 
@@ -488,11 +489,8 @@ So how do we go about addressing this limitation? We have the [Kubernetes Schedu
 
 The details of how to implement these extensions for integration with the **<code>TopologyManager</code>** have not yet been worked out. We still need to answer questions like:
 
-
-    Will we require duplicated logic to determine device affinity in the **<code>TopologyManager</code>** and the scheduler?
-
-
-    Do we need a new API to get **<code>TopologyHints</code>** from the <strong><code>TopologyManager</code></strong> to the scheduler plugin?
+1. Will we require duplicated logic to determine device affinity in the **<code>TopologyManager</code>** and the scheduler?
+1. Do we need a new API to get **<code>TopologyHints</code>** from the <strong><code>TopologyManager</code></strong> to the scheduler plugin?
 
 Work on this feature should begin in the next couple of months, so stay tuned!
 
